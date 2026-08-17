@@ -1,0 +1,19 @@
+# deps
+node_modules/
+
+# secrets — never commit these
+.env
+.env.local
+*.pem
+
+# build output
+dist/
+build/
+
+# logs
+*.log
+npm-debug.log*
+
+# editor / OS
+.vscode/
+.DS_Store
