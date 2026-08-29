@@ -15,4 +15,6 @@ const runSchema = new mongoose.Schema({
   attended: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
 }, { timestamps: true });
 
+runSchema.index({ rsvps: 1 });
+
 module.exports = mongoose.model('Run', runSchema);
