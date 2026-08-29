@@ -13,6 +13,8 @@ const runSchema = new mongoose.Schema({
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   rsvps: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   attended: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+  attendanceCode: { type: String, default: null, select: false },
+  codeExpiresAt:  { type: Date,   default: null, select: false },
 }, { timestamps: true });
 
 runSchema.index({ rsvps: 1 });

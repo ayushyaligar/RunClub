@@ -12,6 +12,8 @@ const userSchema = new mongoose.Schema({
     totalDistanceKm: { type: Number, default: 0 },
     totalRuns: { type: Number, default: 0 },
     badges: { type: [String], default: [] },
+    totalRuns: { type: Number, default: 0 },
+    badges:    { type: [String], default: [] },
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', userSchema);
