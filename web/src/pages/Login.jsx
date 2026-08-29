@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import { request } from '../api/client.js';
 
@@ -67,6 +67,9 @@ export default function Login() {
                 {loading ? 'LOGGING IN…' : 'LOG IN  →'}
             </button>
 
+            <div style={{ marginTop: 20, fontSize: 11, letterSpacing: '0.1em', color: 'var(--grey)' }}>
+                NO ACCOUNT? <Link to="/register" style={{ color: 'var(--red)', fontWeight: 700 }}>REGISTER</Link>
+            </div>
             {error && <p className="state error" style={{ padding: '12px 0' }}>{error}</p>}
             </div>
         </div>
