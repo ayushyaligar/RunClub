@@ -11,6 +11,11 @@ export async function request(path, { method = 'GET', body, token } = {}) {
   });
 
   const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(data.message || `Request failed (${res.status})`);
+  if (!res.ok) throw new Error(data.error || data.message || `Request failed (${res.status})`);  
   return data;
 }
+export const getRun        = (id, token)        => request(`/runs/${id}`, { token });
+export const rsvpToRun     = (id, token)        => request(`/runs/${id}/rsvp`, { method: 'POST', token });
+export const cancelRsvp    = (id, token)        => request(`/runs/${id}/rsvp`, { method: 'DELETE', token });
+export const redeemCode    = (id, code, token)  => request(`/runs/${id}/attendance`, { method: 'POST', body: { code }, token });
+export const generateCode  = (id, token)        => request(`/runs/${id}/attendance/code`, { method: 'POST', token });
