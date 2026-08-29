@@ -1,7 +1,7 @@
 
 // src/routes/runs.routes.js
 const express = require('express');
-const { requireAuth, requireAdmin } = require('../middleware/auth');
+const { requireAuth, requireAdmin, optionalAuth } = require('../middleware/auth');
 const {
   createRun, getAllRuns, getRunById, updateRun, deleteRun,
   rsvpToRun, cancelRsvp,
@@ -12,7 +12,7 @@ const { redeemLimiter } = require('../middleware/rateLimiter');
 const router = express.Router();
 
 router.get('/', getAllRuns);                              // public
-router.get('/:id', getRunById);                            // public
+router.get('/:id', optionalAuth, getRunById);                             // public
 router.post('/', requireAuth, requireAdmin, createRun);    // admin only
 router.put('/:id', requireAuth, requireAdmin, updateRun);  // admin only
 router.delete('/:id', requireAuth, requireAdmin, deleteRun); // admin only

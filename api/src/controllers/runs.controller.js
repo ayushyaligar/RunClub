@@ -1,6 +1,7 @@
 // Day 2-4 — the handler functions the routes delegate to
 // src/controllers/runs.controller.js
 const Run = require('../models/Run');
+const Attendance = require('../models/Attendance');
 
 async function createRun(req, res) {
   try {
@@ -29,11 +30,23 @@ async function getAllRuns(req, res) {
   }
 }
 
+
 async function getRunById(req, res) {
   try {
-    const run = await Run.findById(req.params.id).populate('createdBy', 'name');
+    console.log('getRunById req.user:', req.user);
+    const run = await Run.findById(req.params.id);
     if (!run) return res.status(404).json({ error: 'Run not found' });
-    res.json(run);
+
+    let hasRsvped = false;
+    let hasCheckedIn = false;
+
+    if (req.user) {
+      hasRsvped = run.rsvps.some(id => id.equals(req.user.userId));
+      hasCheckedIn = !!(await Attendance.exists({ run: run._id, user: req.user.userId }));
+    }
+
+    const { rsvps, ...rest } = run.toObject();
+    return res.json({ ...rest, rsvpCount: rsvps.length, hasRsvped, hasCheckedIn });
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch run' });
   }
