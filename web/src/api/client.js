@@ -11,7 +11,7 @@ export async function request(path, { method = 'GET', body, token } = {}) {
   });
 
   const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(data.error || data.message || `Request failed (${res.status})`);  
+  if (!res.ok) throw new Error(data.error || `Request failed (${res.status})`); 
   return data;
 }
 export const getRun        = (id, token)        => request(`/runs/${id}`, { token });

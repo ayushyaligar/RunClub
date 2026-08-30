@@ -7,7 +7,7 @@ const CODE_TTL_MINUTES = 30;
 exports.generateCode = async (req, res) => {
     try {
         const run = await Run.findById(req.params.id);
-        if (!run) return res.status(404).json({ message: 'Run not found' });
+        if (!run) return res.status(404).json({ error: 'Run not found' });
 
         const code = String(crypto.randomInt(100000, 1000000));
         const codeExpiresAt = new Date(Date.now() + CODE_TTL_MINUTES * 60 * 1000);
@@ -19,7 +19,7 @@ exports.generateCode = async (req, res) => {
         return res.status(200).json({ code, expiresAt: codeExpiresAt });
     } catch (err) {
         console.error(err);
-        return res.status(500).json({ message: 'Server error' });
+        return res.status(500).json({ error: 'Server error' });
     }
 };
 const Attendance = require('../models/Attendance');
@@ -29,23 +29,23 @@ const { badgesFor } = require('../config/badges');
 exports.redeemCode = async (req, res) => {
     try {
         const { code } = req.body;
-        if (!code) return res.status(400).json({ message: 'Code is required' });
+        if (!code) return res.status(400).json({ error: 'Code is required' });
 
         const run = await Run.findById(req.params.id).select('+attendanceCode +codeExpiresAt');
-        if (!run) return res.status(404).json({ message: 'Run not found' });
+        if (!run) return res.status(404).json({ error: 'Run not found' });
 
         const valid =
         run.attendanceCode &&
         run.codeExpiresAt > new Date() &&
         String(code) === run.attendanceCode;
 
-        if (!valid) return res.status(400).json({ message: 'Invalid or expired code' });
+        if (!valid) return res.status(400).json({ error: 'Invalid or expired code' });
 
         try {
         await Attendance.create({ run: run._id, user: req.user.userId });
         } catch (err) {
         if (err.code === 11000) {
-            return res.status(409).json({ message: 'Already checked in' });
+            return res.status(409).json({ error: 'Already checked in' });
         }
         throw err;
         }
@@ -69,6 +69,6 @@ exports.redeemCode = async (req, res) => {
         });
     } catch (err) {
         console.error(err);
-        return res.status(500).json({ message: 'Server error' });
+        return res.status(500).json({ error: 'Server error' });
     }
 };

@@ -23,9 +23,13 @@ async function createRun(req, res) {
 
 async function getAllRuns(req, res) {
   try {
-    const runs = await Run.find().sort({ date: 1 }); // soonest first
-    res.json(runs);
+    const runs = await Run.find().sort({ date: 1 });
+    res.json(runs.map(r => {
+      const { rsvps, ...rest } = r.toObject();
+      return { ...rest, rsvpCount: rsvps.length };
+    }));
   } catch (err) {
+    console.error('getAllRuns:', err);
     res.status(500).json({ error: 'Failed to fetch runs' });
   }
 }
@@ -67,10 +71,16 @@ async function updateRun(req, res) {
 
 async function deleteRun(req, res) {
   try {
+    const count = await Attendance.countDocuments({ run: req.params.id });
+    if (count > 0) {
+      return res.status(409).json({ error: `Cannot delete: ${count} attendance record(s) exist` });
+    }
+
     const run = await Run.findByIdAndDelete(req.params.id);
     if (!run) return res.status(404).json({ error: 'Run not found' });
     res.json({ message: 'Run deleted' });
   } catch (err) {
+    console.error('deleteRun:', err);
     res.status(500).json({ error: 'Failed to delete run' });
   }
 }
