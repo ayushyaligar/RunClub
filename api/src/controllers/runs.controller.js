@@ -3,6 +3,12 @@
 const Run = require('../models/Run');
 const Attendance = require('../models/Attendance');
 
+function startOfToday() {
+  const d = new Date();
+  d.setHours(0, 0, 0, 0);
+  return d;
+}
+
 async function createRun(req, res) {
   try {
     const { title, date, time, location, distanceKm, description } = req.body;
@@ -23,11 +29,18 @@ async function createRun(req, res) {
 
 async function getAllRuns(req, res) {
   try {
+    const today = startOfToday();
     const runs = await Run.find().sort({ date: 1 });
-    res.json(runs.map(r => {
+
+    const strip = (r) => {
       const { rsvps, ...rest } = r.toObject();
       return { ...rest, rsvpCount: rsvps.length };
-    }));
+    };
+
+    res.json({
+      upcoming: runs.filter(r => r.date >= today).map(strip),
+      past: runs.filter(r => r.date < today).sort((a, b) => b.date - a.date).map(strip),
+    });
   } catch (err) {
     console.error('getAllRuns:', err);
     res.status(500).json({ error: 'Failed to fetch runs' });

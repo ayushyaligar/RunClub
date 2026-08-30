@@ -128,6 +128,14 @@ export default function RunDetail() {
                 {adminCode ? 'REGENERATE' : 'GENERATE'}
                 </button>
             </div>
+
+            <Link
+                to={`/admin/runs/${id}/edit`}
+                className="btn btn-ghost"
+                style={{ textDecoration: 'none', marginTop: 20, display: 'inline-block' }}
+            >
+                EDIT RUN
+            </Link>
             </div>
         )}
 

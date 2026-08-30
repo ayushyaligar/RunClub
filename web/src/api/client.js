@@ -19,3 +19,8 @@ export const rsvpToRun     = (id, token)        => request(`/runs/${id}/rsvp`, {
 export const cancelRsvp    = (id, token)        => request(`/runs/${id}/rsvp`, { method: 'DELETE', token });
 export const redeemCode    = (id, code, token)  => request(`/runs/${id}/attendance`, { method: 'POST', body: { code }, token });
 export const generateCode  = (id, token)        => request(`/runs/${id}/attendance/code`, { method: 'POST', token });
+export const getAnnouncements   = ()             => request('/announcements');
+export const getAnnouncement    = (id, token)    => request(`/announcements/${id}`, { token });
+export const createAnnouncement = (body, token)  => request('/announcements', { method: 'POST', body, token });
+export const updateAnnouncement = (id, body, token) => request(`/announcements/${id}`, { method: 'PUT', body, token });
+export const deleteAnnouncement = (id, token)    => request(`/announcements/${id}`, { method: 'DELETE', token });

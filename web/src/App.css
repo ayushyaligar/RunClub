@@ -182,3 +182,17 @@
     border-right-color: var(--border);
   }
 }
+
+.row.past .row-title, 
+.row.past .row-day { 
+  color: var(--grey); }
+.row.past .badge { 
+  background: var(--grey); }
+
+.row:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+.row:hover .row-meta,
+.row:hover .row-month { color: var(--mute); }
+.row:hover .badge { background: var(--paper); color: var(--ink); }

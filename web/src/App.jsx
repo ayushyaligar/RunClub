@@ -5,7 +5,8 @@ import RunsList from './pages/RunsList.jsx';
 import RunDetail from './pages/RunDetail.jsx';
 import Profile from './pages/Profile.jsx';
 import Register from './pages/Register.jsx';
-import AdminCreateRun from './pages/AdminCreateRun.jsx';
+import AdminRunForm from './pages/AdminRunForm.jsx';
+import AdminAnnouncementForm from './pages/AdminAnnouncementForm.jsx';
 
 function Nav() {
   const { user, logout } = useAuth();
@@ -52,7 +53,10 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/runs" element={<RunsList />} />
           <Route path="/runs/:id" element={<RequireAuth><RunDetail /></RequireAuth>} />
-          <Route path="/admin/runs/new" element={<RequireAdmin><AdminCreateRun /></RequireAdmin>} />
+          <Route path="/admin/runs/new" element={<RequireAdmin><AdminRunForm /></RequireAdmin>} />
+          <Route path="/admin/runs/:id/edit" element={<RequireAdmin><AdminRunForm /></RequireAdmin>} />
+          <Route path="/admin/announcements/new" element={<RequireAdmin><AdminAnnouncementForm /></RequireAdmin>} />
+          <Route path="/admin/announcements/:id/edit" element={<RequireAdmin><AdminAnnouncementForm /></RequireAdmin>} />
         </Routes>
     </BrowserRouter>
   );
