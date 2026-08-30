@@ -7,6 +7,7 @@ import Profile from './pages/Profile.jsx';
 import Register from './pages/Register.jsx';
 import AdminRunForm from './pages/AdminRunForm.jsx';
 import AdminAnnouncementForm from './pages/AdminAnnouncementForm.jsx';
+import AdminNotify from './pages/AdminNotify.jsx';
 
 function Nav() {
   const { user, logout } = useAuth();
@@ -57,6 +58,7 @@ export default function App() {
           <Route path="/admin/runs/:id/edit" element={<RequireAdmin><AdminRunForm /></RequireAdmin>} />
           <Route path="/admin/announcements/new" element={<RequireAdmin><AdminAnnouncementForm /></RequireAdmin>} />
           <Route path="/admin/announcements/:id/edit" element={<RequireAdmin><AdminAnnouncementForm /></RequireAdmin>} />
+          <Route path="/admin/announcements/:id/notify" element={<RequireAdmin><AdminNotify /></RequireAdmin>} />
         </Routes>
     </BrowserRouter>
   );

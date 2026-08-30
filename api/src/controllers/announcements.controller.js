@@ -1,12 +1,14 @@
 const Announcement = require('../models/Announcement');
+const User = require('../models/User');
+const { sendBatch } = require('../services/mailer');
 
 function startOfToday() {
     const d = new Date();
     d.setHours(0, 0, 0, 0);
     return d;
-    }
+}
 
-    async function getAllAnnouncements(req, res) {
+async function getAllAnnouncements(req, res) {
     try {
         const items = await Announcement.find({
         $or: [
@@ -22,7 +24,7 @@ function startOfToday() {
     }
     }
 
-    async function createAnnouncement(req, res) {
+async function createAnnouncement(req, res) {
     try {
         const { title, description, date, time, location } = req.body;
         if (!title || !description) {
@@ -83,10 +85,51 @@ async function deleteAnnouncement(req, res) {
     }
 }
 
+async function notifyMembers(req, res) {
+    try {
+        const { subject, body } = req.body;
+        if (!subject || !body) {
+        return res.status(400).json({ error: 'Subject and body are required' });
+        }
+
+        const item = await Announcement.findOneAndUpdate(
+        { _id: req.params.id, notifiedAt: null },
+        { notifiedAt: new Date() },
+        { new: true }
+        );
+
+        if (!item) {
+        const exists = await Announcement.exists({ _id: req.params.id });
+        return exists
+            ? res.status(409).json({ error: 'Members have already been notified about this' })
+            : res.status(404).json({ error: 'Announcement not found' });
+        }
+
+        const allowlist = process.env.MAIL_ALLOWLIST?.split(',').map(s => s.trim()).filter(Boolean);
+        const users = await User.find({}, 'email').lean();
+        const recipients = users
+            .map(u => u.email)
+            .filter(Boolean)
+            .filter(e => !allowlist?.length || allowlist.includes(e));
+
+        res.status(202).json({ message: 'Sending', recipients: recipients.length });
+
+        sendBatch({ recipients, subject, text: body })
+        .then(({ count }) =>
+            Announcement.updateOne({ _id: item._id }, { notifiedCount: count ?? 0 })
+        )
+        .catch(err => console.error('notifyMembers batch failed:', err));
+    } catch (err) {
+        console.error('notifyMembers:', err);
+        res.status(500).json({ error: 'Failed to notify members' });
+    }
+}
+
 module.exports = {
     getAllAnnouncements,
     createAnnouncement,
     getAnnouncementById,
     updateAnnouncement,
     deleteAnnouncement,
+    notifyMembers,
 };

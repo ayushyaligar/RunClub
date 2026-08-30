@@ -3,6 +3,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const { sendOne } = require('../services/mailer');
 
 async function register(req, res) {
     try {
@@ -21,6 +22,22 @@ async function register(req, res) {
 
         res.status(201).json({ id: user._id, name: user.name, email: user.email, role: user.role });
         // deliberately NOT sending passwordHash back, ever
+        sendOne({
+            to: user.email,
+            subject: 'Welcome to RunClub',
+            text: `Hi ${user.name},
+
+            You're in. RunClub meets in Bengaluru and everyone is welcome, whatever your pace.
+
+            Here's how it works:
+            - Browse upcoming runs and RSVP to the ones you'll make
+            - Turn up, run, then check in with the code the organiser reads out
+            - Every check-in counts toward your badges
+
+            See you at the start line.
+
+            — RunClub`,
+        });
     } catch (err) {
         res.status(500).json({ error: 'Registration failed' });
     }

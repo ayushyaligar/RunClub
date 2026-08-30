@@ -56,6 +56,9 @@ export default function Board() {
             {user?.role === 'admin' && (
                 <Link to={`/admin/announcements/${a._id}/edit`} className="carousel-edit">EDIT</Link>
             )}
+            {user?.role === 'admin' && !a.notifiedAt && (
+                <Link to={`/admin/announcements/${a._id}/notify`} className="carousel-edit">NOTIFY</Link>
+            )}
             </div>
         </div>
 
