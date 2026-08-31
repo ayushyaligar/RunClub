@@ -19,7 +19,7 @@ services:
     ports:
       - "5000:5000"
     environment:
-      MONGO_URI: mongodb://mongo:27017/runclub
+      MONGO_URI: ${MONGO_URI}
       JWT_SECRET: ${JWT_SECRET}
       RESEND_API_KEY: ${RESEND_API_KEY}
       MAIL_FROM: ${MAIL_FROM}
