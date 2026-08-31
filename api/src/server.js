@@ -1,5 +1,11 @@
 // src/server.js
 require('dotenv').config();
+if (process.env.DNS_SERVERS) {
+    const dns = require('dns');
+    const servers = process.env.DNS_SERVERS.split(',');
+    dns.setServers(servers);
+    dns.promises.setServers(servers);
+}
 const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/db');
@@ -13,7 +19,7 @@ const app = express();
 connectDB();
 
 
-app.use(cors());
+app.use(cors({ origin: process.env.CORS_ORIGIN || '*' }));
 app.use(express.json()); // parses JSON request bodies into req.body
 
 app.use('/api/auth', authRoutes);
