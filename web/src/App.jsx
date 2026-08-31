@@ -50,9 +50,9 @@ export default function App() {
         <Routes>
           <Route path="/register" element={<Register />} />
           <Route path="/profile" element={<RequireAuth><Profile /></RequireAuth>} />
-          <Route path="/" element={<Navigate to="/runs" replace />} />
+          <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/runs" element={<RunsList />} />
+          <Route path="/runs" element={<RequireAuth><RunsList /></RequireAuth>} />
           <Route path="/runs/:id" element={<RequireAuth><RunDetail /></RequireAuth>} />
           <Route path="/admin/runs/new" element={<RequireAdmin><AdminRunForm /></RequireAdmin>} />
           <Route path="/admin/runs/:id/edit" element={<RequireAdmin><AdminRunForm /></RequireAdmin>} />

@@ -14,7 +14,23 @@ export default function Board() {
         getAnnouncements().then(setItems).catch(() => setItems([]));
     }, []);
 
-    if (items.length === 0) return null;
+    if (items.length === 0) {
+        if (user?.role !== 'admin') return null;
+        return (
+            <section className="carousel">
+            <div className="eyebrow" style={{ color: 'var(--paper)' }}>
+                <span className="dot" />
+                <span>NOTICE BOARD</span>
+            </div>
+            <p className="carousel-desc" style={{ marginTop: 16 }}>
+                Nothing posted yet.{' '}
+                <Link to="/admin/announcements/new" style={{ color: 'var(--red)', fontWeight: 700 }}>
+                Post the first notice
+                </Link>
+            </p>
+            </section>
+        );
+    }
 
     const a = items[i];
     const d = a.date ? new Date(a.date) : null;

@@ -1,7 +1,6 @@
 // src/controllers/attendance.controller.js
 const crypto = require('crypto');
 const Run = require('../models/Run');
-
 const CODE_TTL_MINUTES = 30;
 
 exports.generateCode = async (req, res) => {
@@ -25,7 +24,7 @@ exports.generateCode = async (req, res) => {
 const Attendance = require('../models/Attendance');
 const User = require('../models/User');
 const { badgesFor } = require('../config/badges');
-
+// Redeem attendance code for a run
 exports.redeemCode = async (req, res) => {
     try {
         const { code } = req.body;

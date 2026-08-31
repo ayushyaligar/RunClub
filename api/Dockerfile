@@ -1,2 +1,15 @@
-# Day 5. Node base image -> copy package.json -> install -> copy src ->
-# EXPOSE -> CMD. No build step (Node runs the source directly).
+FROM node:20-alpine
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm ci --omit=dev
+
+COPY . .
+
+RUN addgroup -S app && adduser -S app -G app && chown -R app:app /app
+USER app
+
+EXPOSE 5000
+
+CMD ["node", "src/server.js"]
